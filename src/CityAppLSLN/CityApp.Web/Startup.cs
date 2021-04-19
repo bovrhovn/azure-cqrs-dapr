@@ -1,3 +1,5 @@
+using CityApp.Interfaces;
+using CityApp.Services;
 using CityApp.Web.Hubs;
 using CityApp.Web.Settings;
 using Microsoft.AspNetCore.Builder;
@@ -17,6 +19,14 @@ namespace CityApp.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<WebSettings>(Configuration);
+            services.Configure<StorageOptions>(Configuration.GetSection("StorageOptions"));
+            
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+            
+            //settings for connection string
+            services.AddSingleton<ICategoryRepository, CategoryRepository>(_ =>
+                new CategoryRepository(connectionString));
+            
             services.AddControllers();
             
             services.AddCors(options =>

@@ -6,4 +6,8 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.Azure.SignalR" Version="1.8.0" />
     </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\CityApp.Interfaces\CityApp.Interfaces.csproj" />
+      <ProjectReference Include="..\CityApp.Services\CityApp.Services.csproj" />
+    </ItemGroup>
 </Project>

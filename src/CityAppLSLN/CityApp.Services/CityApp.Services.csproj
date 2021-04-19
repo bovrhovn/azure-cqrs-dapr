@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\CityApp.Interfaces\CityApp.Interfaces.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Dapper" Version="1.50.5" />
+        <PackageReference Include="Dapper.Contrib" Version="1.50.5" />
+    </ItemGroup>
+
+</Project>
