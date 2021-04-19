@@ -43,9 +43,9 @@ namespace CityApp.Services
             await using var connection = new SqlConnection(connectionString);
             int offset = (page - 1) * pageCount;
             var currentQuery = "SELECT C.NewsId, C.Title,C.ShortDescription,C.Content " +
-                               "FROM News C ORDER BY C.NewsId DESC WHERE C.Title like '%@query%' OFFSET @offset ROWS FETCH NEXT @pageCount ROWS ONLY;" +
+                               "FROM News C WHERE C.Title like @query ORDER BY C.NewsId DESC;" +
                                "SELECT COUNT(*) FROM News";
-
+            query = "%" + query + "%";
             var result = await connection.QueryMultipleAsync(currentQuery, new {offset, pageCount, query});
 
             var selectedNews = result.Read<News>();

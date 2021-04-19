@@ -15,18 +15,20 @@
         @Model.InfoText
     </p>
 }
-<div class="row">
-    <div class="col-md-12">
-        <a class="btn btn-lg btn-info float-right" asp-page="/Factories/Add">Register new Factory</a>
-    </div>
-</div>
+
 <div class="col-12 mb-3 mt-3">
     <form method="get">
-        <div class="form-group">
-            <label asp-for="Query">Enter search string</label>
-            <input type="text" class="form-control" asp-for="Query">
+        <div class="input-group mb-3">
+            <input asp-for="Query"
+                   class="form-control"
+                   placeholder="Enter search term to search through news"
+                   type="text">
+            <button class="btn btn-outline-secondary"
+                    id="button-addon2"
+                    type="submit">
+                Search <i class="fas fa-search"></i>
+            </button>
         </div>
-        <button type="submit" class="btn btn-primary">Search <i class="fas fa-search"></i></button>
     </form>
 </div>
 
@@ -51,7 +53,8 @@
                     @searchModel.ShortDescription
                 </td>
                 <td>
-                    <a asp-page="Details" asp-route-newsId="@searchModel.NewsId">
+                    <a asp-page="Details"
+                       asp-route-newsId="@searchModel.NewsId">
                         <i class="fas fa-arrow-circle-right"></i>
                     </a>
                 </td>
@@ -64,13 +67,21 @@
             @if (Model.NewsList.HasPreviousPage)
             {
                 <li class="page-item">
-                    <a class="page-link" asp-page="/Info/News" asp-route-pageIndex="@(Model.NewsList.PageIndex - 1)">Previous </a>
+                    <a asp-page="/Info/News"
+                       asp-route-pageIndex="@(Model.NewsList.PageIndex - 1)"
+                       class="page-link">
+                        Previous
+                    </a>
                 </li>
             }
             @if (Model.NewsList.HasNextPage)
             {
                 <li class="page-item">
-                    <a class="page-link" asp-page="/Info/News" asp-route-pageIndex="@(Model.NewsList.PageIndex + 1)">Next</a>
+                    <a asp-page="/Info/News"
+                       asp-route-pageIndex="@(Model.NewsList.PageIndex + 1)"
+                       class="page-link">
+                        Next
+                    </a>
                 </li>
             }
         </ul>
@@ -80,4 +91,3 @@ else
 {
     <p class="text-info">No news found! Check query.</p>
 }
-
