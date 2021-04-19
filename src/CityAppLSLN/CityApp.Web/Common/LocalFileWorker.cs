@@ -14,10 +14,10 @@ namespace CityApp.Web.Common
 {
       public class LocalFileWorker : IFileWorker
     {
-        private readonly IHostingEnvironment environment;
+        private readonly IWebHostEnvironment environment;
         private readonly IUrlHelper urlHelper;
 
-        public LocalFileWorker(IHostingEnvironment environment,
+        public LocalFileWorker(IWebHostEnvironment environment,
             IUrlHelper urlHelper, IOptions<StorageOptions> storageOptions)
         {
             this.environment = environment;

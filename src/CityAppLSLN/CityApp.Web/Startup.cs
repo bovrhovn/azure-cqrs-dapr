@@ -20,15 +20,15 @@ namespace CityApp.Web
         {
             services.Configure<WebSettings>(Configuration);
             services.Configure<StorageOptions>(Configuration.GetSection("StorageOptions"));
-            
+
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
-            
+
             //settings for connection string
-            services.AddSingleton<ICategoryRepository, CategoryRepository>(_ =>
-                new CategoryRepository(connectionString));
-            
+            services.AddSingleton<ICategoryRepository, CategoryRepository>(
+                _ => new CategoryRepository(connectionString));
+
             services.AddControllers();
-            
+
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
@@ -38,9 +38,9 @@ namespace CityApp.Web
                         .AllowAnyHeader()
                         .AllowCredentials());
             });
-            
+
             services.AddSignalR().AddAzureSignalR();
-            
+
             services.AddRazorPages()
                 .AddRazorPagesOptions(options => options.Conventions.AddPageRoute("/Info/Index", ""));
         }
