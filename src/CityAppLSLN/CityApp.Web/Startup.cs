@@ -1,5 +1,6 @@
 using CityApp.Interfaces;
 using CityApp.Services;
+using CityApp.Web.Common;
 using CityApp.Web.Hubs;
 using CityApp.Web.Settings;
 using Microsoft.AspNetCore.Builder;
@@ -24,8 +25,11 @@ namespace CityApp.Web
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
 
             //settings for connection string
-            services.AddSingleton<ICategoryRepository, CategoryRepository>(
+            services.AddScoped<ICategoryRepository, CategoryRepository>(
                 _ => new CategoryRepository(connectionString));
+            
+            // adding local file implementation
+            services.AddScoped<IFileWorker, LocalFileWorker>();
 
             services.AddControllers();
 
