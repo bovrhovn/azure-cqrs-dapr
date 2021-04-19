@@ -1,0 +1,21 @@
+@page "{newsId}"
+@model CityApp.Web.Pages.Info.DetailsPageModel
+
+@{
+    var title = Model.CurrentNews.Title;
+    ViewData["Title"] = "News " + title;
+}
+
+<h1>
+    @title
+</h1>
+<p class="fw-lighter">@Model.CurrentNews.ShortDescription</p>
+
+<p class="fst-normal">
+    @Model.CurrentNews.Content
+</p>
+
+@foreach (var category in Model.CurrentNews.Categories)
+{
+    <span class="badge rounded-pill bg-primary m-2">@category.Name</span>
+}

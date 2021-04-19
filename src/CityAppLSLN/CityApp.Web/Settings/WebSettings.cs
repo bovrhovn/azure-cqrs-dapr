@@ -2,6 +2,6 @@
 {
     public class WebSettings
     {
-        public string DefaultPagingCount { get; set; }
+        public int DefaultPageCount { get; set; }
     }
 }

@@ -38,6 +38,21 @@ namespace CityApp.Services
             return new PaginatedList<News>(selectedNews, count, page, pageCount);
         }
 
+        public async Task<PaginatedList<News>> SearchPagedAsync(string query, int page, int pageCount = 20)
+        {
+            await using var connection = new SqlConnection(connectionString);
+            int offset = (page - 1) * pageCount;
+            var currentQuery = "SELECT C.NewsId, C.Title,C.ShortDescription,C.Content " +
+                               "FROM News C ORDER BY C.NewsId DESC WHERE C.Title like '%@query%' OFFSET @offset ROWS FETCH NEXT @pageCount ROWS ONLY;" +
+                               "SELECT COUNT(*) FROM News";
+
+            var result = await connection.QueryMultipleAsync(currentQuery, new {offset, pageCount, query});
+
+            var selectedNews = result.Read<News>();
+            var count = result.ReadSingle<int>();
+            return new PaginatedList<News>(selectedNews, count, page, pageCount);
+        }
+
         public override async Task<News> GetDetailsAsync(int id)
         {
             await using var connection = new SqlConnection(connectionString);
