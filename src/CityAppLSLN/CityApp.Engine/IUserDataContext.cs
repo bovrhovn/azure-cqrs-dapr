@@ -1,6 +1,4 @@
-﻿using CityApp.Web.Models;
-
-namespace CityApp.Web.Common
+﻿namespace CityApp.Engine
 {
     public interface IUserDataContext
     {

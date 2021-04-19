@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using CityApp.Engine;
 
 namespace CityApp.Interfaces
 {
@@ -13,5 +14,6 @@ namespace CityApp.Interfaces
         Task<TEntity> GetDetailsAsync(int id);
         Task<List<TEntity>> SearchAsync(string query);
         Task<bool> Delete(int id);
+        Task<PaginatedList<TEntity>> GetPagedAsync(int page, int pageCount = 20);
     }
 }

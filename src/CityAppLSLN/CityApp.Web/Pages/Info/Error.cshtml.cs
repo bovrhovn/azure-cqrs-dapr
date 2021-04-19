@@ -19,7 +19,6 @@ namespace CityApp.Web.Pages
 
         public void OnGet()
         {
-            logger.LogInformation("Error page has been loaded");
             RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
         }
     }

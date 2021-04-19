@@ -1,4 +1,4 @@
-﻿namespace CityApp.Web.Models
+﻿namespace CityApp.Engine
 {
     public class CityUserViewModel
     {

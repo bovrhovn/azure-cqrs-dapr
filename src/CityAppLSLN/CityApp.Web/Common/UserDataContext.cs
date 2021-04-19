@@ -1,5 +1,5 @@
 ﻿using System.Security.Claims;
-using CityApp.Web.Models;
+using CityApp.Engine;
 using Microsoft.AspNetCore.Http;
 
 namespace CityApp.Web.Common

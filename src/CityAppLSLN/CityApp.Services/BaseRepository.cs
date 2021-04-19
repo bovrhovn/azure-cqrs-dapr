@@ -2,6 +2,7 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
+using CityApp.Engine;
 using CityApp.Interfaces;
 using Dapper.Contrib.Extensions;
 
@@ -60,6 +61,11 @@ namespace CityApp.Services
         }
 
         public virtual Task<bool> Delete(int id)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public virtual Task<PaginatedList<TEntity>> GetPagedAsync(int page, int pageCount = 20)
         {
             throw new System.NotImplementedException();
         }

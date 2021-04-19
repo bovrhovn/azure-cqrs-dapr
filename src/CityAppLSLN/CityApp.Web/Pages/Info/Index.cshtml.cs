@@ -11,7 +11,7 @@ namespace CityApp.Web.Pages.Info
 
         public void OnGet()
         {
-            logger.LogInformation("Info page loaded.");
+            logger.LogInformation("Info page loaded");
         }
     }
 }

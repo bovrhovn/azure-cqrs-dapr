@@ -5,6 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\CityApp.Engine\CityApp.Engine.csproj" />
       <ProjectReference Include="..\CityApp.Models\CityApp.Models.csproj" />
     </ItemGroup>
 

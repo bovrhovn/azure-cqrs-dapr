@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CityApp.Models", "CityApp.M
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CityApp.Services", "CityApp.Services\CityApp.Services.csproj", "{49BC5E78-5FEE-4D3F-8576-B4B15AEB856C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CityApp.Engine", "CityApp.Engine\CityApp.Engine.csproj", "{6D1CAA6F-EE2F-4C97-B34A-FF1BD217A900}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{49BC5E78-5FEE-4D3F-8576-B4B15AEB856C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49BC5E78-5FEE-4D3F-8576-B4B15AEB856C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49BC5E78-5FEE-4D3F-8576-B4B15AEB856C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D1CAA6F-EE2F-4C97-B34A-FF1BD217A900}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D1CAA6F-EE2F-4C97-B34A-FF1BD217A900}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D1CAA6F-EE2F-4C97-B34A-FF1BD217A900}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D1CAA6F-EE2F-4C97-B34A-FF1BD217A900}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

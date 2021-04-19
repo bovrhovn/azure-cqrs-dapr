@@ -1,9 +1,11 @@
 using System.IO.Compression;
+using CityApp.Engine;
 using CityApp.Interfaces;
 using CityApp.Services;
 using CityApp.Web.Common;
 using CityApp.Web.Hubs;
 using CityApp.Web.Settings;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.ResponseCompression;
@@ -27,14 +29,19 @@ namespace CityApp.Web
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
 
             //settings for connection string
-            services.AddScoped<ICategoryRepository, CategoryRepository>(
-                _ => new CategoryRepository(connectionString));
-            
+            services.AddScoped<ICategoryRepository, CategoryRepository>(_ => new CategoryRepository(connectionString));
+            services.AddScoped<ICityUserRepository, CityUserRepository>(_ => new CityUserRepository(connectionString));
+            services.AddScoped<IElectricityRepository, ElectricityRepository>(_ => new ElectricityRepository(connectionString));
+            services.AddScoped<IElectricityMeasurementRepository, ElectricityMeasurementRepository>(_ => new ElectricityMeasurementRepository(connectionString));
+            services.AddScoped<INewsRepository, NewsRepository>(_ => new NewsRepository(connectionString));
+
             // adding local file implementation
             services.AddScoped<IFileWorker, LocalFileWorker>();
+            services.AddSingleton<IUserDataContext, UserDataContext>();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
+            services.AddHttpContextAccessor();
 
             services.AddControllers();
-
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
@@ -57,10 +64,8 @@ namespace CityApp.Web
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-                app.UseDeveloperExceptionPage();
-            else
-                app.UseExceptionHandler("/Error");
+            if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
+            else app.UseExceptionHandler("/Error");
 
             app.UseStaticFiles();
             app.UseRouting();

@@ -9,7 +9,7 @@ namespace CityApp.Models
         public string FullName { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        public DateTime ApprovalDate { get; set; }
+        public DateTime ApprovalDate { get; set; } = DateTime.Now;
         public bool Approved { get; set; }
         public List<ElectricityMeasurement> ElectricityMeasurement { get; set; } = new();
         public List<News> Subscriptions { get; set; } = new();
