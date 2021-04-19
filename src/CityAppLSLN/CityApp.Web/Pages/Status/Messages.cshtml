@@ -1,0 +1,57 @@
+﻿@page
+@model CityApp.Web.Pages.Status.MessagesPageModel
+
+@{
+    ViewData["Title"] = "Messages";
+}
+
+<h1>
+    Status messages in realtime
+</h1>
+
+<div id="messages"></div>
+
+@section Scripts
+{
+    <script type="application/javascript">
+     document.addEventListener('DOMContentLoaded', function () {
+                    const statsConnection = new signalR.HubConnectionBuilder()
+                                .withUrl('/alerts')                                
+                                .build();
+                    bindConnectionMessage(statsConnection);
+                    statsConnection.start()
+                              .then(() => onConnected(statsConnection))
+                              .catch(console.error);
+                    
+                    $("#btnClear").click(function (event) {
+                                    $("#messages").empty();
+                                    event.preventDefault();
+                    });
+                    
+                    function createMessageEntry(encodedMsg) {
+                                    let entry = document.createElement('div');                            
+                                    entry.innerHTML = 
+                                    '<div class="col-md-12 shadow-sm p-3 mb-5 bg-white rounded pull-left">' +
+                                     encodedMsg +'</div>';                          
+                                    return entry;
+                                }
+                    
+                    function bindConnectionMessage(connection) {
+                          let messageCallback = function (message) {
+                                        if (!message) return;                                
+                                        let messageEntry = createMessageEntry(message);
+                                        let messageBox = document.getElementById('messages');
+                                        messageBox.appendChild(messageEntry);
+                                        messageBox.scrollTop = messageBox.scrollHeight;
+                          };
+                          connection.on('alertMessage', messageCallback); 
+                    }
+                                    
+                    function onConnected(connection) {
+                            $("#messages").empty();
+                            console.log('connection started');
+                            connection.send('alertMessage', 'Connected to real-time messages retrieving');                                          
+                    }
+                });
+    </script>
+}
