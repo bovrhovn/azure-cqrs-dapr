@@ -31,15 +31,14 @@ namespace CityApp.Web.Pages.Account
         public async Task<IActionResult> OnPostAsync()
         {
             logger.LogInformation($"Registering user at {DateTime.Now}");
-            
-            var userId = userRepository.Insert(NewUser);
-
             try
             {
+                var userId = userRepository.Insert(NewUser);
                 var currentUser = await userRepository.GetDetailsAsync((int) userId);
 
                 logger.LogInformation($"Logged in at {DateTime.Now}");
                 await HttpContext.SignInAsync(currentUser.GenerateClaims());
+                InfoText = "User has been registered and login automatically";
             }
             catch (Exception e)
             {

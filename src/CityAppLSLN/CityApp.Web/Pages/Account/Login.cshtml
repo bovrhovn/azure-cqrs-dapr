@@ -5,8 +5,15 @@
     ViewData["Title"] = "Login";
 }
 
+@if (!string.IsNullOrEmpty(Model.InfoText))
+{
+    <p class="text-success font-weight-bold text-xl-left">
+        @Model.InfoText
+    </p>
+}
+
 <h2>
-    Login to the 
+    Login to the CityApp site 
 </h2>
 <div class="row">
     <div class="col-md-12">

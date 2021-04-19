@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using CityApp.Interfaces;
+using CityApp.Web.Common;
 using CityApp.Web.Helpers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -11,7 +12,7 @@ using Microsoft.Extensions.Logging;
 namespace CityApp.Web.Pages.Account
 {
     [AllowAnonymous]
-    public class LoginPageModel : PageModel
+    public class LoginPageModel : GeneratorBasePageModel
     {
         private readonly ICityUserRepository userRepository;
         private readonly ILogger<LoginPageModel> logger;
@@ -36,7 +37,11 @@ namespace CityApp.Web.Pages.Account
         {
             logger.LogInformation(@"Logging in user with {Email}");
             var currentUser = await userRepository.LoginAsync(Email, Password);
-            if (currentUser == null) return RedirectToPage("Login");
+            if (currentUser == null)
+            {
+                InfoText = "There has been an error login you in. Check data and try again";
+                return RedirectToPage("/Account/Login");
+            }
 
             logger.LogInformation($"User {Email} logged in at {DateTime.Now}");
             

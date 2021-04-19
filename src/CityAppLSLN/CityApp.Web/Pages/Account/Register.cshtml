@@ -5,6 +5,13 @@
     ViewData["Title"] = "Register as new city user";
 }
 
+@if (!string.IsNullOrEmpty(Model.InfoText))
+{
+    <p class="text-success font-weight-bold text-xl-left">
+        @Model.InfoText
+    </p>
+}
+
 <h1>
     Register as new city user
 </h1>
