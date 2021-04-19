@@ -1,3 +1,4 @@
+using System.IO.Compression;
 using CityApp.Interfaces;
 using CityApp.Services;
 using CityApp.Web.Common;
@@ -5,6 +6,7 @@ using CityApp.Web.Hubs;
 using CityApp.Web.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -43,6 +45,10 @@ namespace CityApp.Web
                         .AllowCredentials());
             });
 
+            services.AddResponseCompression(options => options.Providers.Add<GzipCompressionProvider>());
+            services.Configure<GzipCompressionProviderOptions>(compressionOptions =>
+                compressionOptions.Level = CompressionLevel.Optimal);
+            
             services.AddSignalR().AddAzureSignalR();
 
             services.AddRazorPages()
@@ -58,7 +64,9 @@ namespace CityApp.Web
 
             app.UseStaticFiles();
             app.UseRouting();
+            app.UseResponseCompression();
             app.UseCors("CorsPolicy");
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

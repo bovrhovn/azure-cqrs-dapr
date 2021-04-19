@@ -1,17 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using CityApp.Web.Pages.Info;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
 namespace CityApp.Web.Pages.Status
 {
     public class MessagesPageModel : PageModel
     {
-        private readonly ILogger<IndexPageModel> logger;
+        private readonly ILogger<MessagesPageModel> logger;
 
-        public MessagesPageModel(ILogger<IndexPageModel> logger) => this.logger = logger;
+        public MessagesPageModel(ILogger<MessagesPageModel> logger) => this.logger = logger;
 
         public void OnGet()
         {
-            logger.LogInformation("Messages page loaded.");
+            logger.LogInformation("Messages page loaded");
         }
     }
 }

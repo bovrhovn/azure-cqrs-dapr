@@ -2,9 +2,10 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
+using CityApp.Interfaces;
 using Dapper.Contrib.Extensions;
 
-namespace CityApp.Interfaces
+namespace CityApp.Services
 {
     public abstract class BaseRepository<TEntity> : IDataRepository<TEntity> where TEntity : class
     {
@@ -16,7 +17,7 @@ namespace CityApp.Interfaces
         }
 
         IDbConnection connection;
-        protected IDbConnection Connection => connection ?? (connection = new SqlConnection(connectionString));
+        protected IDbConnection Connection => connection ??= new SqlConnection(connectionString);
 
         public virtual IEnumerable<TEntity> GetAll()
         {
