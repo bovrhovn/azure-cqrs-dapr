@@ -8,11 +8,12 @@ on:
     branches:
       - main
   workflow_dispatch:
-
+   
 jobs:
   build:
     runs-on: windows-latest
-
+    env:
+        working-directory: ./src
     steps:
     - uses: actions/checkout@v2
 
