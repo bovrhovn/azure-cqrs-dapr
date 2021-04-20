@@ -11,16 +11,16 @@ on:
    
 jobs:
   build:
-    runs-on: windows-latest
-    env:
-        working-directory: ./src
+    runs-on: windows-latest 
+        
     steps:
     - uses: actions/checkout@v2
-
+        
     - name: Set up .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '5.0.x'
+        working-directory: src
 
     - name: Build with dotnet
       run: dotnet build --configuration Release
