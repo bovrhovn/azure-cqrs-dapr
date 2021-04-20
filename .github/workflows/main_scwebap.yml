@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 defaults:
   run:
-    working-directory: ./src
+    working-directory: ./src/CityAppLSLN/
 jobs:
   build:
     runs-on: windows-latest 
