@@ -60,7 +60,7 @@ namespace CityApp.Services
                         "FROM CityUsers C WHERE CityUserId=@id;" +
                         "SELECT N.NewsId,N.Title, N.Content,N.ShortDescription,N.ExternalLink FROM News N " + 
                         "JOIN News2Users U on U.NewsId=N.NewsId WHERE U.CityUserId=@id;" + 
-                        "SELECT E.ElectricityMeasurementId, E.UserId, E.EntryDate,E.LowWatts,E.HighWatts FROM " + 
+                        "SELECT E.ElectricityMeasurementId, E.UserId, E.EntryDate,E.LowWatts,E.HighWats FROM " + 
                         "ElectricityMeasurements E WHERE E.UserId=@id";
 
             var result = await connection.QueryMultipleAsync(query, new {id});
