@@ -8,7 +8,9 @@ on:
     branches:
       - main
   workflow_dispatch:
-   
+defaults:
+  run:
+    working-directory: ./src
 jobs:
   build:
     runs-on: windows-latest 
@@ -19,8 +21,7 @@ jobs:
     - name: Set up .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '5.0.x'
-        working-directory: src
+        dotnet-version: '5.0.x'        
 
     - name: Build with dotnet
       run: dotnet build --configuration Release
