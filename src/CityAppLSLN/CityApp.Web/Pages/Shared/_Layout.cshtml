@@ -38,11 +38,19 @@
                            class="nav-link text-dark">
                             Basic information
                         </a>
-                    </li><li class="nav-item">
+                    </li>
+                    <li class="nav-item">
                         <a asp-area=""
                            asp-page="/Info/News"
                            class="nav-link text-dark">
                             News
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-area=""
+                           asp-page="/Info/Stats"
+                           class="nav-link text-dark">
+                            Electricity stats
                         </a>
                     </li>
                 </ul>
@@ -55,25 +63,34 @@
                        class="font-weight-bolder mr-1">
                         @User.Identity.Name
                     </a>
-                    <i class="fa fa-grip-lines-vertical"></i>
+                    <i class="fas fa-angle-double-right"></i>
                     <a asp-page="/Account/Logout"
                        class="text-dark ml-1">
-                        logout
+                        Logout
                     </a>
                 }
                 else
                 {
-                    <a asp-page="/Account/Login">Login</a>
+                    <a asp-page="/Account/Login" class="font-weight-bolder">Login</a>
                 }
             </form>
         </div>
     </nav>
 </header>
 <div class="container">
-    <main class="pb-3"
-          role="main">
-        @RenderBody()
-    </main>
+    <main role="main" class="pb-3">
+            @if (IsSectionDefined("breadcrumb"))
+            {
+                <div class="row">
+                    <div class="col-md-12">
+                        <nav aria-label="breadcrumb" class="float-right">
+                            @RenderSection("breadcrumb")
+                        </nav>
+                    </div>
+                </div>
+            }
+            @RenderBody()
+        </main>
 </div>
 <footer class="border-top footer text-muted">
     <div class="container">

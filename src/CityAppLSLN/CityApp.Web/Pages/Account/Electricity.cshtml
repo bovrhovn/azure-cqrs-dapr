@@ -1,0 +1,111 @@
+@page
+@using CityApp.Engine
+@model CityApp.Web.Pages.Account.ElectricityPageModel
+@inject IUserDataContext UserDataContext
+@{
+    var currentUser = UserDataContext.GetCurrentUser();
+    ViewData["Title"] = "Electricity data " + currentUser.Fullname;
+}
+
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a asp-page="/Info/Index">Basic information</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a asp-page="/Account/Profile">Electricity data for @currentUser.Fullname</a>
+        </li>
+        <li aria-current="page"
+            class="breadcrumb-item active">
+            Electricity
+        </li>
+    </ol>
+}
+
+<h1>
+    Electricity data for @currentUser.Fullname
+</h1>
+@if (!string.IsNullOrEmpty(Model.InfoText))
+{
+    <p class="text-success font-weight-bold text-xl-left">
+        @Model.InfoText
+    </p>
+}
+<div class="col-12 mb-3 mt-3">
+    <form method="get">
+        <div class="input-group mb-3">
+            <div class="input-group mb-3">
+                <select asp-for="Electricity"
+                        class="form-select"
+                        id="electricity"
+                        name="electricity">
+                    @foreach (var currentElectricity in Model.ElectricityList)
+                    {
+                        <option value="@currentElectricity.Value">@currentElectricity.Text</option>
+                    }
+                </select>
+                <button class="btn btn-outline-secondary"
+                        type="submit">
+                    Filter <i class="fas fa-filter"></i>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+@if (Model.Measurements.Any())
+{
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Entry date</th>
+            <th scope="col">Low watts</th>
+            <th scope="col">High watts</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var searchModel in Model.Measurements)
+        {
+            <tr>
+                <td>
+                    @searchModel.EntryDate
+                </td>
+                <td>
+                    @searchModel.LowWatts
+                </td>
+                <td>
+                    @searchModel.HightWats
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    <nav aria-label="Devices Count">
+        <ul class="pagination">
+            @if (Model.Measurements.HasPreviousPage)
+            {
+                <li class="page-item">
+                    <a asp-page="/Info/News"
+                       asp-route-pageIndex="@(Model.Measurements.PageIndex - 1)"
+                       class="page-link">
+                        Previous
+                    </a>
+                </li>
+            }
+            @if (Model.Measurements.HasNextPage)
+            {
+                <li class="page-item">
+                    <a asp-page="/Info/News"
+                       asp-route-pageIndex="@(Model.Measurements.PageIndex + 1)"
+                       class="page-link">
+                        Next
+                    </a>
+                </li>
+            }
+        </ul>
+    </nav>
+}
+else
+{
+    <p class="text-info">No measurements found! Select appropriate electricity location.</p>
+}

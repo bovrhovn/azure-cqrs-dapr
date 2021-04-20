@@ -27,8 +27,7 @@ namespace CityApp.Web.Pages.Account
         }
 
         [BindProperty] public CityUser CurrentUser { get; set; }
-        [BindProperty] public bool NotificationsEnabled { get; set; }
-
+        
         public async Task OnGetAsync()
         {
             var cityUserViewModel = userDataContext.GetCurrentUser();
@@ -51,6 +50,37 @@ namespace CityApp.Web.Pages.Account
                 logger.LogError(e.Message);
                 InfoText = "There has been an error updating user - " + e.Message;
             }
+
+            return RedirectToPage("/Account/Profile");
+        }
+
+        public async Task<IActionResult> OnPostRemoveSubscriptionAsync()
+        {
+            logger.LogInformation("Removing subscription for user");
+            var cityUserViewModel = userDataContext.GetCurrentUser();
+
+            var form = await Request.ReadFormAsync();
+            var newsId = form["newsId"];
+            if (string.IsNullOrEmpty(newsId))
+            {
+                var thereIsNoNewsIdSpecified = "There is no news id specified";
+                logger.LogError(thereIsNoNewsIdSpecified);
+                InfoText = thereIsNoNewsIdSpecified;
+                return RedirectToPage("/Account/Profile");
+            }
+
+            try
+            {
+                var currentNewsId = int.Parse(newsId);
+                await cityUserRepository.RemoveSubscriptionFromNewsAsync(cityUserViewModel.CityUserId, currentNewsId);
+                InfoText = $"Unsubscribed from news with id {currentNewsId}";
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e.Message);
+                InfoText = "There has been an error unsubscribing - " + e.Message;
+            }
+
             return RedirectToPage("/Account/Profile");
         }
     }

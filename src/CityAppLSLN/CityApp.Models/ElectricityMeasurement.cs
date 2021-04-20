@@ -7,7 +7,7 @@ namespace CityApp.Models
         public int ElectricityMeasurementId { get; set; }
         public DateTime EntryDate { get; set; }
         public int LowWatts { get; set; }
-        public int HightWatts { get; set; }
+        public int HightWats { get; set; }
         public int CityUserId { get; set; }
         public CityUser CityUser { get; set; }
         public int ElectricityId { get; set; }

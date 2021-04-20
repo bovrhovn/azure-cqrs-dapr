@@ -25,7 +25,7 @@ namespace CityApp.Web.Pages.Info
 
         public async Task OnGetAsync(int? pageIndex)
         {
-            int page = pageIndex ?? 1;
+            var page = pageIndex ?? 1;
             logger.LogInformation($"Loading news for {Query}");
             var data = await newsRepository.SearchPagedAsync(Query, page, webSettings.DefaultPageCount);
             NewsList = data;

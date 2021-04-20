@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Runtime.CompilerServices;
+using System.Linq;
 using System.Threading.Tasks;
 using CityApp.Engine;
 using CityApp.Interfaces;
@@ -29,12 +29,12 @@ namespace CityApp.Services
         {
             entity.Password = PasswordHash.CreateHash(entity.Password);
             using var connection = new SqlConnection(connectionString);
-            
+
             var item = connection.Execute(
                 $"UPDATE CityUsers SET FullName=@{nameof(entity.FullName)},Email=@{nameof(entity.Email)},Password=@{nameof(entity.Password)} " +
                 $"WHERE CityUserId=@{nameof(entity.CityUserId)}",
                 entity);
-            
+
             return item > 0;
         }
 
@@ -58,9 +58,9 @@ namespace CityApp.Services
             await using var connection = new SqlConnection(connectionString);
             var query = "SELECT CityUserId, C.Email,C.FullName,C.Approved, C.ApprovalDate " +
                         "FROM CityUsers C WHERE CityUserId=@id;" +
-                        "SELECT N.NewsId,N.Title, N.Content,N.ShortDescription,N.ExternalLink FROM News N " + 
-                        "JOIN News2Users U on U.NewsId=N.NewsId WHERE U.CityUserId=@id;" + 
-                        "SELECT E.ElectricityMeasurementId, E.UserId, E.EntryDate,E.LowWatts,E.HighWats FROM " + 
+                        "SELECT N.NewsId,N.Title, N.Content,N.ShortDescription,N.ExternalLink FROM News N " +
+                        "JOIN News2Users U on U.NewsId=N.NewsId WHERE U.CityUserId=@id;" +
+                        "SELECT TOP 20 E.ElectricityMeasurementId, E.UserId, E.EntryDate,E.LowWatts,E.HighWats FROM " +
                         "ElectricityMeasurements E WHERE E.UserId=@id";
 
             var result = await connection.QueryMultipleAsync(query, new {id});
@@ -73,17 +73,19 @@ namespace CityApp.Services
 
         public override long Insert(CityUser entity)
         {
-            entity.Password = PasswordHash.CreateHash(entity.Password);
+            if (!string.IsNullOrEmpty(entity.Password))
+                entity.Password = PasswordHash.CreateHash(entity.Password);
+
             entity.Approved = true;
             entity.ApprovalDate = DateTime.Now;
-            
+
             using var connection = new SqlConnection(connectionString);
-            
+
             var item = connection.ExecuteScalar(
                 $"INSERT INTO CityUsers(FullName,Email,Password, Approved, ApprovalDate)VALUES(@{nameof(entity.FullName)},@{nameof(entity.Email)},@{nameof(entity.Password)},@{nameof(entity.Approved)},@{nameof(entity.ApprovalDate)});" +
                 "SELECT CAST(SCOPE_IDENTITY() as bigint)",
                 entity);
-            return Convert.ToInt64(item); 
+            return Convert.ToInt64(item);
         }
 
         public async Task<CityUser> LoginAsync(string username, string password)
@@ -95,6 +97,42 @@ namespace CityApp.Services
 
             if (item == null) return null;
             return PasswordHash.ValidateHash(password, item.Password) ? item : null;
+        }
+
+        public async Task<bool> AddSubscriptionToNewsAsync(int userId, int newsId)
+        {
+            await using var connection = new SqlConnection(connectionString);
+            var item = await connection.ExecuteAsync(
+                $"INSERT INTO News2Users(NewsId,CityUserId)VALUES(@newsId,@userId)",
+                new {userId, newsId});
+            return item > 0;
+        }
+
+        public async Task<bool> RemoveSubscriptionFromNewsAsync(int userId, int newsId)
+        {
+            await using var connection = new SqlConnection(connectionString);
+            var item = await connection.ExecuteAsync(
+                $"DELETE FROM News2Users WHERE NewsId=@newsId AND CityUserId=@userId",
+                new {userId, newsId});
+            return item > 0;
+        }
+
+        public async Task<List<News>> GetSubscriptionsForUserAsync(int userId)
+        {
+            await using var connection = new SqlConnection(connectionString);
+            var query = "SELECT N.NewsId,N.Title,N.Content,N.ShortDescription,N.ExternalLink FROM News N " +
+                        "JOIN News2Users U on U.NewsId=N.NewsId WHERE U.CityUserId=@userId";
+            var data = await connection.QueryAsync<News>(query, new {userId});
+            return data.ToList();
+        }
+
+        public async Task<bool> IsSubscribedToNewsAsync(int userId, int newsId)
+        {
+            await using var connection = new SqlConnection(connectionString);
+            var query = "SELECT N.NewsId,N.Title,N.Content,N.ShortDescription,N.ExternalLink FROM News N " +
+                        "JOIN News2Users U on U.NewsId=N.NewsId WHERE U.CityUserId=@userId AND N.NewsId=@newsId";
+            var data = await connection.QueryAsync<News>(query, new {userId, newsId});
+            return data.Any();
         }
     }
 }

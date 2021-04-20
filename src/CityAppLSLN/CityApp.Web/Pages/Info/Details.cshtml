@@ -6,15 +6,54 @@
     ViewData["Title"] = "News " + title;
 }
 
+@section breadcrumb
+{
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a asp-page="/Info/Index">Basic information</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a asp-page="/Info/News">All news</a>
+        </li>
+        <li aria-current="page"
+            class="breadcrumb-item active">
+            @title
+        </li>
+    </ol>
+}
+
+<p class="text-success font-weight-bold text-xl-left">
+    @Model.InfoText
+</p>
+@if (User.Identity.IsAuthenticated)
+{
+    @if (!Model.IsCurrentLoggedInUserSubscribed)
+    {
+        <div class="row">
+            <div class="col-md-12">
+                <div class="float-md-right">
+                    <form asp-page-handler="AddSubscription"
+                          method="post">
+                        <input name="newsId"
+                               type="hidden"
+                               value="@Model.CurrentNews.NewsId" />
+                        <button class="btn btn-info"
+                                type="submit">
+                            Subscribe <i class="fas fa-plus-circle"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+}
 <h1>
     @title
 </h1>
 <p class="fw-lighter">@Model.CurrentNews.ShortDescription</p>
-
 <p class="fst-normal">
     @Model.CurrentNews.Content
 </p>
-
 @foreach (var category in Model.CurrentNews.Categories)
 {
     <span class="badge rounded-pill bg-primary m-2">@category.Name</span>
