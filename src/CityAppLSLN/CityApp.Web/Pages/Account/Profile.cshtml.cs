@@ -1,5 +1,7 @@
+using System;
 using System.Threading.Tasks;
 using CityApp.Engine;
+using CityApp.Interfaces;
 using CityApp.Models;
 using CityApp.Web.Common;
 using Microsoft.AspNetCore.Authorization;
@@ -12,12 +14,15 @@ namespace CityApp.Web.Pages.Account
     public class ProfilePageModel : GeneratorBasePageModel
     {
         private readonly IUserDataContext userDataContext;
+        private readonly ICityUserRepository cityUserRepository;
         private readonly ILogger<ProfilePageModel> logger;
 
         public ProfilePageModel(IUserDataContext userDataContext,
+            ICityUserRepository cityUserRepository,
             ILogger<ProfilePageModel> logger)
         {
             this.userDataContext = userDataContext;
+            this.cityUserRepository = cityUserRepository;
             this.logger = logger;
         }
 
@@ -27,24 +32,25 @@ namespace CityApp.Web.Pages.Account
         public async Task OnGetAsync()
         {
             var cityUserViewModel = userDataContext.GetCurrentUser();
-            CurrentUser = new CityUser
-            {
-                CityUserId = cityUserViewModel.CityUserId, FullName = cityUserViewModel.Fullname,
-                Email = cityUserViewModel.Email
-            };
+            CurrentUser = await cityUserRepository.GetDetailsAsync(cityUserViewModel.CityUserId);
             logger.LogInformation($"User {CurrentUser.FullName} loaded!");
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public IActionResult OnPost()
         {
-            logger.LogInformation($"Updating alerting for ");
-            var cityUserViewModel = userDataContext.GetCurrentUser();
-            CurrentUser = new CityUser
+            logger.LogInformation($"Updating data for profile {CurrentUser.FullName}");
+            try
             {
-                CityUserId = cityUserViewModel.CityUserId, FullName = cityUserViewModel.Fullname,
-                Email = cityUserViewModel.Email
-            };
-
+                cityUserRepository.Update(CurrentUser);
+                var infoText = $"User {CurrentUser.FullName} has been updated";
+                logger.LogInformation(infoText);
+                InfoText = infoText;
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e.Message);
+                InfoText = "There has been an error updating user - " + e.Message;
+            }
             return RedirectToPage("/Account/Profile");
         }
     }

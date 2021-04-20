@@ -43,7 +43,7 @@ namespace CityApp.Web.Pages.Account
             catch (Exception e)
             {
                 logger.LogError(e.Message);
-                InfoText = "There has been error signing up.";
+                InfoText = "There has been error signing up. " + e.Message;
             }
 
             return RedirectToPage("/Info/Index");
