@@ -20,7 +20,7 @@ namespace CityApp.Electricity.Controllers
         private readonly IElectricityMeasurementRepository electricityMeasurementRepository;
         private readonly IMemoryCache memoryCache;
 
-        public ElectricityController(ILogger<ElectricityController> logger, 
+        public ElectricityController(ILogger<ElectricityController> logger,
             IElectricityRepository electricityRepository,
             IElectricityMeasurementRepository electricityMeasurementRepository,
             IMemoryCache memoryCache)
@@ -44,6 +44,7 @@ namespace CityApp.Electricity.Controllers
                 list = (await electricityRepository.GetAllAsync()).ToList();
                 memoryCache.Set(memoryCache, list, cacheEntryOptions);
             }
+
             logger.LogInformation($"Loaded {list.Count} items from database");
             return Ok(list);
         }
@@ -52,7 +53,10 @@ namespace CityApp.Electricity.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> SearchPagedAsync(int cityUserId, int electricityId, int page, int pageCount)
         {
-            var data = await electricityMeasurementRepository.GetPagedForUserAsync(cityUserId,electricityId,page,pageCount);
+            int? electricityValue = null;
+            if (electricityId != -1) electricityValue = electricityId;
+            var data = await electricityMeasurementRepository.GetPagedForUserAsync(cityUserId, electricityValue, page,
+                pageCount);
             return Ok(data);
         }
     }

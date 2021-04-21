@@ -22,7 +22,7 @@ namespace CityApp.Web.Factories
         {
             this.client = client;
             this.logger = logger;
-            client.BaseAddress = new Uri(webSettingsValue.Value.NewsServiceUrl, UriKind.RelativeOrAbsolute);
+            client.BaseAddress = new Uri(webSettingsValue.Value.ElectricityServiceUrl, UriKind.RelativeOrAbsolute);
         }
 
         public async Task<PaginatedList<ElectricityMeasurement>> SearchPagedAsync(int cityUserId, int electricityId,
@@ -38,7 +38,7 @@ namespace CityApp.Web.Factories
         public async Task<List<Electricity>> GetElectricityAsync()
         {
             logger.LogInformation($"Calling details for electricity");
-            var receivedResponse = await client.GetStringAsync($"all");
+            var receivedResponse = await client.GetStringAsync("all");
             logger.LogInformation($"Received {receivedResponse}");
             return JsonConvert.DeserializeObject<List<Electricity>>(receivedResponse);
         }
