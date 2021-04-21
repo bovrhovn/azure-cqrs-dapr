@@ -1,0 +1,58 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: app-secret
+  namespace: services
+type: Opaque
+data:
+  db: U2VydmVyPXRjcDpzY2RhdGFzZXJ2ZXIuZGF0YWJhc2Uud2luZG93cy5uZXQsMTQzMztJbml0aWFsIENhdGFsb2c9Q2l0eUFwcERiO1BlcnNpc3QgU2VjdXJpdHkgSW5mbz1GYWxzZTtVc2VyIElEPWJvamFudjtQYXNzd29yZD1QYQ0KJCR3MHJkMSE7TXVsdGlwbGVBY3RpdmVSZXN1bHRTZXRzPUZhbHNlO0VuY3J5cHQ9VHJ1ZTtUcnVzdFNlcnZlckNlcnRpZmljYXRlPUZhbHNlO0Nvbm5lY3Rpb24gVGltZW91dD0zMDs=
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: electricity-api
+  namespace: services
+  labels:
+    app: electricity-api
+    service: electricity-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: electricity-api
+  template:
+    metadata:
+      labels:
+        app: electricity-api
+        service: electricity-api
+    spec:
+      containers:
+        - name: electricity-api
+          image: scimagesregistry.azurecr.io/citywebapp/electricity:3.0
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          env:
+            - name: ConnectionStrings__DefaultConnection
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: db
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: electricity-api
+  namespace: services
+  labels:
+    app: electricity-api
+    service: electricity-api
+spec:  
+  ports:
+    - port: 80
+      targetPort: 80
+      name: http
+  selector:
+    service: electricity-api

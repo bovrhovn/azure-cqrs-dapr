@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: app-secret
+  namespace: app
+type: Opaque
+data:
+  db: U2VydmVyPXRjcDpzY2RhdGFzZXJ2ZXIuZGF0YWJhc2Uud2luZG93cy5uZXQsMTQzMztJbml0aWFsIENhdGFsb2c9Q2l0eUFwcERiO1BlcnNpc3QgU2VjdXJpdHkgSW5mbz1GYWxzZTtVc2VyIElEPWJvamFudjtQYXNzd29yZD1QYQ0KJCR3MHJkMSE7TXVsdGlwbGVBY3RpdmVSZXN1bHRTZXRzPUZhbHNlO0VuY3J5cHQ9VHJ1ZTtUcnVzdFNlcnZlckNlcnRpZmljYXRlPUZhbHNlO0Nvbm5lY3Rpb24gVGltZW91dD0zMDs=  
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: webapp
+  namespace: app
+  labels:
+    app: web
+    service: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: web
+  template:
+    metadata:
+      labels:
+        app: web
+        service: web              
+    spec:
+      containers:
+        - name: web
+          image: scimagesregistry.azurecr.io/citywebapp:4.0
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          env:
+            - name: NewsServiceUrl
+              value: "http://news-api.services.svc.cluster.local/news/"
+            - name: ElectricityServiceUrl
+              value: "http://electricity-api.services.svc.cluster.local/electricity/"
+            - name: ConnectionStrings__DefaultConnection
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: db
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+  namespace: app
+  labels:
+    app: web
+    service: web
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 80
+      name: http
+  selector:
+    service: web

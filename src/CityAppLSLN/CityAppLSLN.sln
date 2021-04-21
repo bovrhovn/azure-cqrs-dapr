@@ -21,6 +21,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kubernetes", "Kubernetes", 
 ProjectSection(SolutionItems) = preProject
 	..\dapr-config.yaml = ..\dapr-config.yaml
 	..\collector-config.yaml = ..\collector-config.yaml
+	..\web.yaml = ..\web.yaml
+	..\electricity.yaml = ..\electricity.yaml
+	..\news.yaml = ..\news.yaml
 EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CityApp.News", "CityApp.News\CityApp.News.csproj", "{54A4771F-C403-4F19-8CF4-C431152668A8}"
