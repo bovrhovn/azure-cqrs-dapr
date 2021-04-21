@@ -1,6 +1,7 @@
 using System.IO.Compression;
 using CityApp.Engine;
 using CityApp.Interfaces;
+using CityApp.Logic.Utils;
 using CityApp.Services;
 using CityApp.Web.Common;
 using CityApp.Web.Hubs;
@@ -52,6 +53,8 @@ namespace CityApp.Web
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
             services.AddHttpContextAccessor();
 
+            services.AddSingleton<Messages>();
+            
             services.AddControllers();
             services.AddCors(options =>
             {

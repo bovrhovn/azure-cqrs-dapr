@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
@@ -36,6 +37,17 @@ namespace CityApp.Services
             return measurements.ToList();
         }
 
+        public override long Insert(ElectricityMeasurement entity)
+        {
+            using var connection = new SqlConnection(connectionString);
+            var item = connection.ExecuteScalar(
+                $"INSERT INTO ElectricityMeasurements(UserId, LowWatts,HighWats,EntryDate,ElectricityId)VALUES" +
+                $"(@{nameof(entity.CityUserId)},@{nameof(entity.LowWatts)},@{nameof(entity.HighWats)},@{nameof(entity.EntryDate)},@{nameof(entity.ElectricityId)});" +
+                "SELECT CAST(SCOPE_IDENTITY() as bigint)",
+                entity);
+            return Convert.ToInt64(item);
+        }
+
         public async Task<PaginatedList<ElectricityMeasurement>> GetPagedForUserAsync(int cityUserId,
             int? electricityId, int page, int pageCount = 20)
         {
@@ -51,7 +63,7 @@ namespace CityApp.Services
                 currentQuery += ";";
 
             currentQuery += "SELECT COUNT(*) FROM ElectricityMeasurements";
-            
+
             SqlMapper.GridReader result;
             if (electricityId.HasValue)
                 result =
@@ -61,7 +73,7 @@ namespace CityApp.Services
                 result =
                     await connection.QueryMultipleAsync(currentQuery,
                         new {offset, pageCount, cityUserId});
-            
+
             var electricityMeasurements = result.Read<ElectricityMeasurement>();
             var count = result.ReadSingle<int>();
             return new PaginatedList<ElectricityMeasurement>(electricityMeasurements, count, page, pageCount);

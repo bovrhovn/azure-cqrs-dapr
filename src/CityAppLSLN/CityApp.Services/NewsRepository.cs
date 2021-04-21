@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using CityApp.Engine;
@@ -36,6 +37,16 @@ namespace CityApp.Services
             var selectedNews = result.Read<News>();
             var count = result.ReadSingle<int>();
             return new PaginatedList<News>(selectedNews, count, page, pageCount);
+        }
+
+        public override long Insert(News entity)
+        {
+            using var connection = new SqlConnection(connectionString);
+            var item = connection.ExecuteScalar(
+                $"INSERT INTO News(Title,Content,ShortDescription,ExternalLink)VALUES(@{nameof(entity.Title)},@{nameof(entity.Content)},@{nameof(entity.ShortDescription)},@{nameof(entity.ExternalLink)});" +
+                "SELECT CAST(SCOPE_IDENTITY() as bigint)",
+                entity);
+            return Convert.ToInt64(item);
         }
 
         public async Task<PaginatedList<News>> SearchPagedAsync(string query, int page, int pageCount = 20)
