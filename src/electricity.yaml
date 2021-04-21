@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
         - name: electricity-api
-          image: scimagesregistry.azurecr.io/citywebapp/electricity:3.0
+          image: scimagesregistry.azurecr.io/citywebapp/electricity:4.0
           imagePullPolicy: Always
           ports:
             - name: http

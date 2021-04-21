@@ -2,57 +2,70 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: app-secret
-  namespace: services
+  namespace: cqrs
 type: Opaque
 data:
   db: U2VydmVyPXRjcDpzY2RhdGFzZXJ2ZXIuZGF0YWJhc2Uud2luZG93cy5uZXQsMTQzMztJbml0aWFsIENhdGFsb2c9Q2l0eUFwcERiO1BlcnNpc3QgU2VjdXJpdHkgSW5mbz1GYWxzZTtVc2VyIElEPWJvamFudjtQYXNzd29yZD1QYSQkdzByZDEhO011bHRpcGxlQWN0aXZlUmVzdWx0U2V0cz1GYWxzZTtFbmNyeXB0PVRydWU7VHJ1c3RTZXJ2ZXJDZXJ0aWZpY2F0ZT1GYWxzZTtDb25uZWN0aW9uIFRpbWVvdXQ9MzA7
+  signalr: RW5kcG9pbnQ9aHR0cHM6Ly9zY2FsZXJ0cy5zZXJ2aWNlLnNpZ25hbHIubmV0O0FjY2Vzc0tleT1lK0IzWWRCeFRPK1RlQWtWTzV3d3lRVG5BOS9SWGFWbzQwdEpXOGVxckU0PTtWZXJzaW9uPTEuMDs=
+  searchkey: NERGQ0RFRUM3QkE2REEyMjM5QzgxMEFEOUUyRTBFMzE=
 ---
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: news-api
-  namespace: services
+  name: webapp
+  namespace: cqrs
   labels:
-    app: news-api
-    service: news-api
+    app: web
+    service: web
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      service: news-api
+      service: web
   template:
     metadata:
       labels:
-        app: news-api
-        service: news-api
+        app: web
+        service: web
     spec:
       containers:
-        - name: news-api
-          image: scimagesregistry.azurecr.io/citywebapp/news:4.0
+        - name: web
+          image: scimagesregistry.azurecr.io/citywebapp/cqrs:2.0
           imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 80
               protocol: TCP
-          env:            
+          env:
+            - name: SearchServiceKey
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: searchkey
             - name: ConnectionStrings__DefaultConnection
               valueFrom:
                 secretKeyRef:
                   name: app-secret
                   key: db
+            - name: Azure__SignalR__ConnectionString
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: signalr
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: news-api
-  namespace: services
+  name: web
+  namespace: cqrs
   labels:
-    app: news-api
-    service: news-api
-spec:  
+    app: web
+    service: web
+spec:
+  type: LoadBalancer
   ports:
     - port: 80
       targetPort: 80
       name: http
   selector:
-    service: news-api
+    service: web
