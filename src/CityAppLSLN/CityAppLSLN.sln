@@ -25,6 +25,8 @@ ProjectSection(SolutionItems) = preProject
 	..\electricity.yaml = ..\electricity.yaml
 	..\news.yaml = ..\news.yaml
 	..\cqrs.yaml = ..\cqrs.yaml
+	..\redis-state.yaml = ..\redis-state.yaml
+	..\redis-pubsub.yaml = ..\redis-pubsub.yaml
 EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CityApp.News", "CityApp.News\CityApp.News.csproj", "{54A4771F-C403-4F19-8CF4-C431152668A8}"
