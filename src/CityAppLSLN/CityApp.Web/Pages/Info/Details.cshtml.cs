@@ -42,30 +42,12 @@ namespace CityApp.Web.Pages.Info
 
         public async Task<IActionResult> OnPostAddSubscriptionAsync()
         {
-            var cityUserViewModel = userDataContext.GetCurrentUser();
-            logger.LogInformation("Adding subscription for user");
             var form = await Request.ReadFormAsync();
             var newsId = form["newsId"];
-            if (string.IsNullOrEmpty(newsId))
-            {
-                var thereIsNoNewsIdSpecified = "There is no news id specified";
-                logger.LogError(thereIsNoNewsIdSpecified);
-                InfoText = thereIsNoNewsIdSpecified;
-                return RedirectToPage("/Info/News");
-            }
-
-            try
-            {
-                var currentNewsId = int.Parse(newsId);
-                await cityUserRepository.AddSubscriptionToNewsAsync(cityUserViewModel.CityUserId, currentNewsId);
-                InfoText = $"Subscribed to news with id {currentNewsId} - check profile with submissions";
-            }
-            catch (Exception e)
-            {
-                logger.LogError(e.Message);
-                InfoText = "There has been an error subscribing - " + e.Message;
-            }
-
+            var currentNewsId = int.Parse(newsId);
+            var result = await mediator.Send(new SubscribeToNewsCommand(userDataContext.GetCurrentUser()?.CityUserId ?? -1,
+                currentNewsId));
+            InfoText = result ? $"Item with id {newsId} has been added" : "There has been an error, check logs";
             return RedirectToPage("/Info/Details", new {newsId});
         }
 

@@ -9,6 +9,7 @@ using Azure.Search.Documents.Models;
 using CityApp.Engine;
 using CityApp.Logic.ViewModels;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace CityApp.Logic.AppServices
 {
@@ -28,20 +29,28 @@ namespace CityApp.Logic.AppServices
 
     public class SearchNewsQueryHandler : IRequestHandler<SearchNewsQuery, PaginatedList<NewsViewModel>>
     {
+        private readonly ILogger<SearchNewsQueryHandler> logger;
         private const string searchEndpoint = "https://scdata.search.windows.net";
+
+        public SearchNewsQueryHandler(ILogger<SearchNewsQueryHandler> logger) => this.logger = logger;
 
         public async Task<PaginatedList<NewsViewModel>> Handle(SearchNewsQuery request,
             CancellationToken cancellationToken)
         {
             var searchKey = Environment.GetEnvironmentVariable("SearchServiceKey");
+            logger.LogInformation("Reading environment varuiable for azure search key " + searchKey);
             var searchIndex = "azure-sql-news-data-index";
             var indexClient = new SearchClient(new Uri(searchEndpoint, UriKind.RelativeOrAbsolute), searchIndex,
                 new AzureKeyCredential(searchKey));
+            
             var searchOptions = new SearchOptions
             {
                 QueryType = SearchQueryType.Simple,
                 SearchMode = SearchMode.Any
             };
+            
+            logger.LogInformation("Sending query request to Azure Search");
+            
             var data = await indexClient.SearchAsync<NewsViewModel>($"{request.Query ?? ""}*", searchOptions,
                 cancellationToken);
             var list = new List<NewsViewModel>();
@@ -49,6 +58,7 @@ namespace CityApp.Logic.AppServices
             {
                 list.Add(currentData.Document);
             }
+            logger.LogInformation($"Received {list.Count} items");
             return PaginatedList<NewsViewModel>.Create(list.AsQueryable(), request.Page,
                 request.DefaultPageCount);
         }
