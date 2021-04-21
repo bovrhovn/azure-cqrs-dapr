@@ -3,7 +3,9 @@ using CityApp.Engine;
 using CityApp.Interfaces;
 using CityApp.Services;
 using CityApp.Web.Common;
+using CityApp.Web.Factories;
 using CityApp.Web.Hubs;
+using CityApp.Web.Interfaces;
 using CityApp.Web.Settings;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -52,6 +54,9 @@ namespace CityApp.Web
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
             services.AddHttpContextAccessor();
 
+            services.AddHttpClient<INewsService, NewsService>();
+            services.AddHttpClient<IElectricityService, ElectricityService>();
+            
             services.AddControllers();
             services.AddCors(options =>
             {

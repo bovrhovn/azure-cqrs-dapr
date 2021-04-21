@@ -10,6 +10,23 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CityApp.Services", "CityApp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CityApp.Engine", "CityApp.Engine\CityApp.Engine.csproj", "{6D1CAA6F-EE2F-4C97-B34A-FF1BD217A900}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{F9434F9B-3686-4E09-A402-95936B3947EA}"
+ProjectSection(SolutionItems) = preProject
+	..\Dockerweb = ..\Dockerweb
+	..\Dockerelectricity = ..\Dockerelectricity
+	..\Dockernews = ..\Dockernews
+EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kubernetes", "Kubernetes", "{373F12C8-B1D2-4016-8ECC-ADEDAF8C157B}"
+ProjectSection(SolutionItems) = preProject
+	..\dapr-config.yaml = ..\dapr-config.yaml
+	..\collector-config.yaml = ..\collector-config.yaml
+EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CityApp.News", "CityApp.News\CityApp.News.csproj", "{54A4771F-C403-4F19-8CF4-C431152668A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CityApp.Electricity", "CityApp.Electricity\CityApp.Electricity.csproj", "{E7B3B437-FFE6-4171-A2D2-A744D0D58CDB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +53,13 @@ Global
 		{6D1CAA6F-EE2F-4C97-B34A-FF1BD217A900}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D1CAA6F-EE2F-4C97-B34A-FF1BD217A900}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6D1CAA6F-EE2F-4C97-B34A-FF1BD217A900}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54A4771F-C403-4F19-8CF4-C431152668A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54A4771F-C403-4F19-8CF4-C431152668A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54A4771F-C403-4F19-8CF4-C431152668A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54A4771F-C403-4F19-8CF4-C431152668A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7B3B437-FFE6-4171-A2D2-A744D0D58CDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7B3B437-FFE6-4171-A2D2-A744D0D58CDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7B3B437-FFE6-4171-A2D2-A744D0D58CDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7B3B437-FFE6-4171-A2D2-A744D0D58CDB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -6,6 +6,7 @@ using CityApp.Interfaces;
 using CityApp.Models;
 using CityApp.Web.Common;
 using CityApp.Web.Helpers;
+using CityApp.Web.Interfaces;
 using CityApp.Web.Settings;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,20 +20,17 @@ namespace CityApp.Web.Pages.Account
     public class ElectricityPageModel : GeneratorBasePageModel
     {
         private readonly ILogger<ElectricityPageModel> logger;
-        private readonly IElectricityRepository electricityRepository;
-        private readonly IElectricityMeasurementRepository electricityMeasurementRepository;
+        private readonly IElectricityService electricityService;
         private readonly IUserDataContext userDataContext;
-        private WebSettings webSettings;
+        private readonly WebSettings webSettings;
 
         public ElectricityPageModel(ILogger<ElectricityPageModel> logger,
-            IElectricityRepository electricityRepository,
-            IElectricityMeasurementRepository electricityMeasurementRepository,
+            IElectricityService electricityService,
             IUserDataContext userDataContext,
             IOptions<WebSettings> webSettingsValue)
         {
             this.logger = logger;
-            this.electricityRepository = electricityRepository;
-            this.electricityMeasurementRepository = electricityMeasurementRepository;
+            this.electricityService = electricityService;
             this.userDataContext = userDataContext;
             webSettings = webSettingsValue.Value;
         }
@@ -40,7 +38,7 @@ namespace CityApp.Web.Pages.Account
         public async Task OnGetAsync(int? pageIndex)
         {
             logger.LogInformation($"Electricity page loaded with query string {Electricity}");
-            var list = await electricityRepository.GetAllAsync();
+            var list = await electricityService.GetElectricityAsync();
             ElectricityList =
                 list.ToList().GetSelectedItems(d => d.Name + " " + d.Place, d => d.ElectricityId.ToString(),
                     d => d.ElectricityId.ToString() == Electricity);
@@ -53,7 +51,7 @@ namespace CityApp.Web.Pages.Account
             {
                 logger.LogInformation($"Doing filter without electricity");
                 Measurements =
-                    await electricityMeasurementRepository.GetPagedForUserAsync(userId, null, page,
+                    await electricityService.SearchPagedAsync(userId, -1, page,
                         webSettings.DefaultPageCount);
             }
             else
@@ -61,7 +59,7 @@ namespace CityApp.Web.Pages.Account
                 logger.LogInformation($"Doing filter with electricity {Electricity}");
                 var electricityId = int.Parse(Electricity);
                 Measurements =
-                    await electricityMeasurementRepository.GetPagedForUserAsync(userId, electricityId, page,
+                    await electricityService.SearchPagedAsync(userId, electricityId, page,
                         webSettings.DefaultPageCount);
             }
         }

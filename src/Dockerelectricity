@@ -1,0 +1,38 @@
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+WORKDIR /src
+
+COPY ["CityAppLSLN/CityApp.Models/", "CityApp.Models/"]
+COPY ["CityAppLSLN/CityApp.Interfaces/", "CityApp.Interfaces/"]
+COPY ["CityAppLSLN/CityApp.Engine/", "CityApp.Engine/"]
+COPY ["CityAppLSLN/CityApp.Services/", "CityApp.Services/"]
+COPY ["CityAppLSLN/CityApp.Electricity/", "CityApp.Electricity/"]
+
+
+RUN dotnet restore "CityApp.Engine/CityApp.Engine.csproj"
+RUN dotnet restore "CityApp.Models/CityApp.Models.csproj"
+RUN dotnet restore "CityApp.Interfaces/CityApp.Interfaces.csproj"
+RUN dotnet restore "CityApp.Services/CityApp.Services.csproj"
+RUN dotnet restore "CityApp.Electricity/CityApp.Electricity.csproj"
+
+COPY . .
+
+WORKDIR "/src/"
+RUN dotnet restore "CityApp.Engine/CityApp.Engine.csproj"
+RUN dotnet restore "CityApp.Models/CityApp.Models.csproj"
+RUN dotnet restore "CityApp.Interfaces/CityApp.Interfaces.csproj"
+RUN dotnet restore "CityApp.Services/CityApp.Services.csproj"
+RUN dotnet restore "CityApp.Electricity/CityApp.Electricity.csproj"
+
+RUN dotnet build "CityApp.Engine/CityApp.Engine.csproj" -c Release -o /CityApp.Electricity
+RUN dotnet build "CityApp.Models/CityApp.Models.csproj" -c Release -o /CityApp.Electricity
+RUN dotnet build "CityApp.Interfaces/CityApp.Interfaces.csproj" -c Release -o /CityApp.Electricity
+RUN dotnet build "CityApp.Services/CityApp.Services.csproj" -c Release -o /CityApp.Electricity
+RUN dotnet build "CityApp.Electricity/CityApp.Electricity.csproj" -c Release -o /app
+
+FROM build AS publish
+RUN dotnet publish "CityApp.Electricity/CityApp.Electricity.csproj" -c Release -o /app
+
+FROM mcr.microsoft.com/dotnet/aspnet:5.0 as final
+WORKDIR /app
+COPY --from=publish /app .
+ENTRYPOINT ["dotnet", "CityApp.Electricity.dll"]

@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using CityApp.Engine;
-using CityApp.Interfaces;
 using CityApp.Models;
 using CityApp.Web.Common;
+using CityApp.Web.Interfaces;
 using CityApp.Web.Settings;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -13,13 +13,14 @@ namespace CityApp.Web.Pages.Info
     public class NewsPageModel : GeneratorBasePageModel
     {
         private readonly ILogger<NewsPageModel> logger;
-        private readonly INewsRepository newsRepository;
+        private readonly INewsService newsService;
         private readonly WebSettings webSettings;
 
-        public NewsPageModel(ILogger<NewsPageModel> logger, INewsRepository newsRepository,IOptions<WebSettings> webSettingsValue)
+        public NewsPageModel(ILogger<NewsPageModel> logger, INewsService newsService,
+            IOptions<WebSettings> webSettingsValue)
         {
             this.logger = logger;
-            this.newsRepository = newsRepository;
+            this.newsService = newsService;
             webSettings = webSettingsValue.Value;
         }
 
@@ -27,7 +28,7 @@ namespace CityApp.Web.Pages.Info
         {
             var page = pageIndex ?? 1;
             logger.LogInformation($"Loading news for {Query}");
-            var data = await newsRepository.SearchPagedAsync(Query, page, webSettings.DefaultPageCount);
+            var data = await newsService.SearchAsync(Query, page, webSettings.DefaultPageCount);
             NewsList = data;
             logger.LogInformation($"Loaded {data.Count} items from database");
         }

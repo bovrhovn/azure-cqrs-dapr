@@ -4,6 +4,7 @@ using CityApp.Engine;
 using CityApp.Interfaces;
 using CityApp.Models;
 using CityApp.Web.Common;
+using CityApp.Web.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -12,15 +13,17 @@ namespace CityApp.Web.Pages.Info
     public class DetailsPageModel : GeneratorBasePageModel
     {
         private readonly ILogger<DetailsPageModel> logger;
-        private readonly INewsRepository newsRepository;
+        private readonly INewsService newsService;
         private readonly ICityUserRepository cityUserRepository;
         private readonly IUserDataContext userDataContext;
 
-        public DetailsPageModel(ILogger<DetailsPageModel> logger, INewsRepository newsRepository,
-            ICityUserRepository cityUserRepository, IUserDataContext userDataContext)
+        public DetailsPageModel(ILogger<DetailsPageModel> logger, 
+            INewsService newsService,
+            ICityUserRepository cityUserRepository, 
+            IUserDataContext userDataContext)
         {
             this.logger = logger;
-            this.newsRepository = newsRepository;
+            this.newsService = newsService;
             this.cityUserRepository = cityUserRepository;
             this.userDataContext = userDataContext;
         }
@@ -28,7 +31,7 @@ namespace CityApp.Web.Pages.Info
         public async Task OnGetAsync(int newsId)
         {
             logger.LogInformation($"Getting news for {newsId}");
-            var news = await newsRepository.GetDetailsAsync(newsId);
+            var news = await newsService.GetDetailsAsync(newsId);
             logger.LogInformation($"Received {news.Title} back");
             CurrentNews = news;
 
