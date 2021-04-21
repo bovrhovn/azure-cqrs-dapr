@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
-namespace CityApp.Web.Pages
+namespace CityApp.Web.Pages.Info
 {
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     [IgnoreAntiforgeryToken]
@@ -19,6 +19,7 @@ namespace CityApp.Web.Pages
 
         public void OnGet()
         {
+            logger.LogInformation("Error page has been loaded");
             RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
         }
     }

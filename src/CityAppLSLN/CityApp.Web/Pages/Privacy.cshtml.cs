@@ -9,8 +9,6 @@ namespace CityApp.Web.Pages
 
         public PrivacyModel(ILogger<PrivacyModel> logger) => this.logger = logger;
 
-        public void OnGet()
-        {
-        }
+        public void OnGet() => logger.LogInformation("Privacy page has been loaded");
     }
 }
