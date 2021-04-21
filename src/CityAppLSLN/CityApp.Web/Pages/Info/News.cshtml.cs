@@ -1,9 +1,11 @@
+using System.Threading;
 using System.Threading.Tasks;
 using CityApp.Engine;
-using CityApp.Interfaces;
-using CityApp.Models;
+using CityApp.Logic.AppServices;
+using CityApp.Logic.ViewModels;
 using CityApp.Web.Common;
 using CityApp.Web.Settings;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -13,26 +15,22 @@ namespace CityApp.Web.Pages.Info
     public class NewsPageModel : GeneratorBasePageModel
     {
         private readonly ILogger<NewsPageModel> logger;
-        private readonly INewsRepository newsRepository;
+        private readonly IMediator mediator;
         private readonly WebSettings webSettings;
 
-        public NewsPageModel(ILogger<NewsPageModel> logger, INewsRepository newsRepository,IOptions<WebSettings> webSettingsValue)
+        public NewsPageModel(ILogger<NewsPageModel> logger, IMediator mediator,
+            IOptions<WebSettings> webSettingsValue)
         {
             this.logger = logger;
-            this.newsRepository = newsRepository;
+            this.mediator = mediator;
             webSettings = webSettingsValue.Value;
         }
 
-        public async Task OnGetAsync(int? pageIndex)
-        {
-            var page = pageIndex ?? 1;
-            logger.LogInformation($"Loading news for {Query}");
-            var data = await newsRepository.SearchPagedAsync(Query, page, webSettings.DefaultPageCount);
-            NewsList = data;
-            logger.LogInformation($"Loaded {data.Count} items from database");
-        }
-        
-        [BindProperty] public PaginatedList<News> NewsList { get; set; }
+        public async Task OnGetAsync(int? pageIndex) =>
+            NewsList = await mediator.Send(new SearchNewsQuery(Query, pageIndex ?? 1, webSettings.DefaultPageCount),
+                CancellationToken.None);
+
+        [BindProperty] public PaginatedList<NewsViewModel> NewsList { get; set; }
         [BindProperty(SupportsGet = true)] public string Query { get; set; }
     }
 }

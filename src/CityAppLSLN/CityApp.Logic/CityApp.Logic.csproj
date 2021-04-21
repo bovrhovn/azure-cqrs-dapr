@@ -5,11 +5,13 @@
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
     <ItemGroup>
+        <PackageReference Include="Azure.Search.Documents" Version="11.2.0" />
         <PackageReference Include="CSharpFunctionalExtensions" Version="2.15.1" />
+        <PackageReference Include="MediatR" Version="9.0.0" />
         <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="AppServices" />
-      <Folder Include="ViewModels" />
+      <ProjectReference Include="..\CityApp.Engine\CityApp.Engine.csproj" />
+      <ProjectReference Include="..\CityApp.Interfaces\CityApp.Interfaces.csproj" />
     </ItemGroup>
 </Project>

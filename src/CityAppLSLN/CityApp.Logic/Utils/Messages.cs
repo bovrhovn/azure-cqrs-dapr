@@ -13,7 +13,7 @@ namespace CityApp.Logic.Utils
         public T Dispatch<T>(IQuery<T> query)
         {
             var type = typeof(IQueryHandler<,>);
-            Type[] typeArgs = { query.GetType(), typeof(T) };
+            Type[] typeArgs = {query.GetType(), typeof(T)};
             var handlerType = type.MakeGenericType(typeArgs);
 
             dynamic handler = provider.GetService(handlerType);
@@ -24,25 +24,25 @@ namespace CityApp.Logic.Utils
             }
             return (T) handler.Handle((dynamic) query);
         }
-        
+
         public Result Dispatch(ICommand command)
         {
             var type = typeof(ICommandHandler<>);
-            Type[] typeArgs = { command.GetType() };
+            Type[] typeArgs = {command.GetType()};
             var handlerType = type.MakeGenericType(typeArgs);
 
             dynamic handler = provider.GetService(handlerType);
-            return (Result)handler.Handle((dynamic)command);
-        } 
-        
-        public Result<T> DispatchValue<V,T>(ICommand command) where T:class where V : ICommand
+            return (Result) handler.Handle((dynamic) command);
+        }
+
+        public Result<T> DispatchValue<V, T>(ICommand command) where T : class where V : ICommand
         {
-            var type = typeof(IValuedCommandHandler<V,T>);
-            Type[] typeArgs = { command.GetType() };
+            var type = typeof(IValuedCommandHandler<V, T>);
+            Type[] typeArgs = {command.GetType()};
             var handlerType = type.MakeGenericType(typeArgs);
 
             dynamic handler = provider.GetService(handlerType);
-            return (Result<T>)handler.Handle((dynamic)command);
+            return (Result<T>) handler.Handle((dynamic) command);
         }
     }
 }

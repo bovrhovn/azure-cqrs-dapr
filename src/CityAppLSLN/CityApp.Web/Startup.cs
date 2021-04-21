@@ -1,11 +1,13 @@
 using System.IO.Compression;
 using CityApp.Engine;
 using CityApp.Interfaces;
+using CityApp.Logic.AppServices;
 using CityApp.Logic.Utils;
 using CityApp.Services;
 using CityApp.Web.Common;
 using CityApp.Web.Hubs;
 using CityApp.Web.Settings;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -53,7 +55,7 @@ namespace CityApp.Web
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
             services.AddHttpContextAccessor();
 
-            services.AddSingleton<Messages>();
+            services.AddMediatR(typeof(SearchNewsQuery).Assembly);
             
             services.AddControllers();
             services.AddCors(options =>
