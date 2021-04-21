@@ -10,6 +10,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CityApp.Services", "CityApp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CityApp.Engine", "CityApp.Engine\CityApp.Engine.csproj", "{6D1CAA6F-EE2F-4C97-B34A-FF1BD217A900}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CityApp.Logic", "CityApp.Logic\CityApp.Logic.csproj", "{E98D2D0D-5549-43F0-96D4-2E452CC32368}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{BB0B9F72-7CBC-45C2-AE61-F0123032CA6B}"
+ProjectSection(SolutionItems) = preProject
+	..\Dockerfileweb = ..\Dockerfileweb
+EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +43,9 @@ Global
 		{6D1CAA6F-EE2F-4C97-B34A-FF1BD217A900}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D1CAA6F-EE2F-4C97-B34A-FF1BD217A900}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6D1CAA6F-EE2F-4C97-B34A-FF1BD217A900}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E98D2D0D-5549-43F0-96D4-2E452CC32368}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E98D2D0D-5549-43F0-96D4-2E452CC32368}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E98D2D0D-5549-43F0-96D4-2E452CC32368}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E98D2D0D-5549-43F0-96D4-2E452CC32368}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

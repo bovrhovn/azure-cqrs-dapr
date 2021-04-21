@@ -11,6 +11,7 @@ namespace CityApp.Web.Pages
 
         public void OnGet()
         {
+            logger.LogInformation("Privacy page loaded");
         }
     }
 }
