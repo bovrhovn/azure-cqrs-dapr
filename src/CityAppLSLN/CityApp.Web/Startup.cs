@@ -2,7 +2,7 @@ using System.IO.Compression;
 using CityApp.Engine;
 using CityApp.Interfaces;
 using CityApp.Logic.AppServices;
-using CityApp.Logic.Utils;
+using CityApp.Logic.Decorators;
 using CityApp.Services;
 using CityApp.Web.Common;
 using CityApp.Web.Hubs;
@@ -56,6 +56,7 @@ namespace CityApp.Web
             services.AddHttpContextAccessor();
 
             services.AddMediatR(typeof(SearchNewsQuery).Assembly);
+            services.AddSingleton(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
             
             services.AddControllers();
             services.AddCors(options =>

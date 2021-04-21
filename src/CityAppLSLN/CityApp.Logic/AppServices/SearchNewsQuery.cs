@@ -7,7 +7,6 @@ using Azure;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
 using CityApp.Engine;
-using CityApp.Logic.Utils;
 using CityApp.Logic.ViewModels;
 using MediatR;
 
@@ -50,7 +49,6 @@ namespace CityApp.Logic.AppServices
             {
                 list.Add(currentData.Document);
             }
-
             return PaginatedList<NewsViewModel>.Create(list.AsQueryable(), request.Page,
                 request.DefaultPageCount);
         }

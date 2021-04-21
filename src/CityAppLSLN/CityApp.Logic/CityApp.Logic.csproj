@@ -14,4 +14,9 @@
       <ProjectReference Include="..\CityApp.Engine\CityApp.Engine.csproj" />
       <ProjectReference Include="..\CityApp.Interfaces\CityApp.Interfaces.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60">
+        <HintPath>..\..\..\..\..\..\..\..\usr\share\dotnet\shared\Microsoft.AspNetCore.App\5.0.5\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+      </Reference>
+    </ItemGroup>
 </Project>

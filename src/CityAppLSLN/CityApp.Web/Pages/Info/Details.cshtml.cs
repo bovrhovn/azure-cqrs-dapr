@@ -2,8 +2,11 @@ using System;
 using System.Threading.Tasks;
 using CityApp.Engine;
 using CityApp.Interfaces;
+using CityApp.Logic.AppServices;
+using CityApp.Logic.ViewModels;
 using CityApp.Models;
 using CityApp.Web.Common;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -15,30 +18,26 @@ namespace CityApp.Web.Pages.Info
         private readonly INewsRepository newsRepository;
         private readonly ICityUserRepository cityUserRepository;
         private readonly IUserDataContext userDataContext;
+        private readonly IMediator mediator;
 
         public DetailsPageModel(ILogger<DetailsPageModel> logger, INewsRepository newsRepository,
-            ICityUserRepository cityUserRepository, IUserDataContext userDataContext)
+            ICityUserRepository cityUserRepository, IUserDataContext userDataContext,
+            IMediator mediator)
         {
             this.logger = logger;
             this.newsRepository = newsRepository;
             this.cityUserRepository = cityUserRepository;
             this.userDataContext = userDataContext;
+            this.mediator = mediator;
         }
 
         public async Task OnGetAsync(int newsId)
         {
-            logger.LogInformation($"Getting news for {newsId}");
-            var news = await newsRepository.GetDetailsAsync(newsId);
-            logger.LogInformation($"Received {news.Title} back");
-            CurrentNews = news;
-
-            if (User.Identity is {IsAuthenticated: true})
-            {
-                //check, if subscribed to this news
-                IsCurrentLoggedInUserSubscribed =
-                    await cityUserRepository.IsSubscribedToNewsAsync(userDataContext.GetCurrentUser().CityUserId,
-                        newsId);
-            }
+            var newsDetailsViewModel =
+                await mediator.Send(new GetNewsDetailsQuery(newsId,
+                    userDataContext.GetCurrentUser()?.CityUserId ?? -1));
+            CurrentNews = newsDetailsViewModel;
+            IsCurrentLoggedInUserSubscribed = newsDetailsViewModel.IsCurrentLoggedInUserSubscribed;
         }
 
         public async Task<IActionResult> OnPostAddSubscriptionAsync()
@@ -70,7 +69,7 @@ namespace CityApp.Web.Pages.Info
             return RedirectToPage("/Info/Details", new {newsId});
         }
 
-        [BindProperty] public News CurrentNews { get; set; }
+        [BindProperty] public NewsDetailsViewModel CurrentNews { get; set; }
         [BindProperty] public bool IsCurrentLoggedInUserSubscribed { get; set; }
     }
 }
