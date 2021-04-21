@@ -39,6 +39,7 @@ namespace CityApp.News.Controllers
                 list = (await newsRepository.GetAllAsync()).ToList();
                 memoryCache.Set(memoryCache, list, cacheEntryOptions);
             }
+
             logger.LogInformation($"Loaded {list.Count} items from database");
             return Ok(list);
         }
@@ -47,6 +48,7 @@ namespace CityApp.News.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> SearchPagedAsync(string query, int page, int pageCount)
         {
+            if (query == "%") query = string.Empty;
             var data = await newsRepository.SearchPagedAsync(query, page, pageCount);
             return Ok(data);
         }
@@ -63,6 +65,7 @@ namespace CityApp.News.Controllers
                 logger.LogInformation("Information was not found");
                 return NotFound();
             }
+
             return Ok(news);
         }
     }

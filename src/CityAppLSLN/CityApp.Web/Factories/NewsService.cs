@@ -35,6 +35,7 @@ namespace CityApp.Web.Factories
         public async Task<PaginatedList<News>> SearchAsync(string query, int page, int pageCount)
         {
             logger.LogInformation($"Calling search for news with query {query}");
+            if (string.IsNullOrEmpty(query)) query = "%";
             var receivedResponse = await client.GetStringAsync($"search/{query}/{page}/{pageCount}");
             logger.LogInformation($"Received {receivedResponse}");
             return JsonConvert.DeserializeObject<PaginatedList<News>>(receivedResponse);

@@ -10,6 +10,10 @@ namespace CityApp.Engine
         public int TotalPages { get; }
         public int TotalItemCount { get; }
 
+        public PaginatedList() : this(new List<T>(), 0, 1, 0)
+        {
+        }
+
         public PaginatedList(IEnumerable<T> items, int count, int pageIndex, int pageSize)
         {
             PageIndex = pageIndex;

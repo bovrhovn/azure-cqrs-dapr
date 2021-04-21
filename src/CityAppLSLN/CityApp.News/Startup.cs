@@ -21,6 +21,15 @@ namespace CityApp.News
             services.AddScoped<INewsRepository, NewsRepository>(_ => new NewsRepository(connectionString));
             services.AddMemoryCache();
             services.AddControllers();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder
+                        .SetIsOriginAllowed(_ => true)
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials());
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "CityApp News API", Version = "v1"});
@@ -38,6 +47,7 @@ namespace CityApp.News
 
             app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseCors("CorsPolicy");
             app.UseAuthorization();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
