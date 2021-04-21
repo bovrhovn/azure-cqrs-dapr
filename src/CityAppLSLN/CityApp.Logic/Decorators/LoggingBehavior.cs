@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -13,9 +14,12 @@ namespace CityApp.Logic.Decorators
 
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
             logger.LogInformation($"Handling {typeof(TRequest).Name}");
             var response = await next();
-            logger.LogInformation($"Handled {typeof(TResponse).Name}");
+            stopWatch.Stop();
+            logger.LogInformation($"Handled {typeof(TResponse).Name} in {stopWatch.ElapsedMilliseconds} ms");
             return response;
         }
     }

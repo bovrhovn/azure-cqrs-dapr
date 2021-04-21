@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,6 +9,7 @@ using CityApp.Logic.ViewModels;
 using CityApp.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
 namespace CityApp.Logic.AppServices
@@ -31,15 +34,18 @@ namespace CityApp.Logic.AppServices
     {
         private readonly IElectricityRepository electricityRepository;
         private readonly IElectricityMeasurementRepository electricityMeasurementRepository;
-        private readonly ILogger<GetMeasurementsQuery> logger;
+        private readonly ILogger<GetMeasurementsQueryHandler> logger;
+        private readonly IMemoryCache memoryCache;
+        private const string MemoryKey = "Electricity";
 
         public GetMeasurementsQueryHandler(IElectricityRepository electricityRepository,
             IElectricityMeasurementRepository electricityMeasurementRepository,
-            ILogger<GetMeasurementsQuery> logger)
+            ILogger<GetMeasurementsQueryHandler> logger, IMemoryCache memoryCache)
         {
             this.electricityRepository = electricityRepository;
             this.electricityMeasurementRepository = electricityMeasurementRepository;
             this.logger = logger;
+            this.memoryCache = memoryCache;
         }
 
         public async Task<MeasurementViewModel> Handle(GetMeasurementsQuery request,
@@ -47,9 +53,17 @@ namespace CityApp.Logic.AppServices
         {
             logger.LogInformation($"Electricity page loaded with query string {request.Electricityid}");
             var measurementViewModel = new MeasurementViewModel();
-
             logger.LogInformation("Loading data for electricity");
-            var list = await electricityRepository.GetAllAsync();
+
+            if (!memoryCache.TryGetValue<List<Electricity>>(MemoryKey, out var list))
+            {
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromSeconds(60));
+
+                list = (await electricityRepository.GetAllAsync()).ToList();
+                memoryCache.Set(memoryCache, list, cacheEntryOptions);
+            }
+
             var currentData = list.Select(currentItem => new SelectListItem
             {
                 Text = currentItem.Name, Value = currentItem.ElectricityId.ToString(),
@@ -78,9 +92,9 @@ namespace CityApp.Logic.AppServices
             }
 
             var currentList = measurements.Select(measurement => new ElectricityViewModel
-                {
-                    EntryDate = measurement.EntryDate, HighWats = measurement.HighWats, LowWatts = measurement.LowWatts
-                }).ToList();
+            {
+                EntryDate = measurement.EntryDate, HighWats = measurement.HighWats, LowWatts = measurement.LowWatts
+            }).ToList();
             measurementViewModel.Measurements =
                 PaginatedList<ElectricityViewModel>.Create(currentList.AsQueryable(), request.Page,
                     request.DefaultPageCount);

@@ -7,21 +7,18 @@ using CityApp.Web.Common;
 using CityApp.Web.Settings;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace CityApp.Web.Pages.Info
 {
     public class NewsPageModel : GeneratorBasePageModel
     {
-        private readonly ILogger<NewsPageModel> logger;
         private readonly IMediator mediator;
         private readonly WebSettings webSettings;
 
-        public NewsPageModel(ILogger<NewsPageModel> logger, IMediator mediator,
+        public NewsPageModel(IMediator mediator,
             IOptions<WebSettings> webSettingsValue)
         {
-            this.logger = logger;
             this.mediator = mediator;
             webSettings = webSettingsValue.Value;
         }

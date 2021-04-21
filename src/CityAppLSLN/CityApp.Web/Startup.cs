@@ -54,7 +54,7 @@ namespace CityApp.Web
             });
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
             services.AddHttpContextAccessor();
-
+            services.AddMemoryCache();
             services.AddMediatR(typeof(SearchNewsQuery).Assembly);
             services.AddSingleton(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
             

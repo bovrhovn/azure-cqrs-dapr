@@ -1,10 +1,7 @@
-using System;
 using System.Threading.Tasks;
 using CityApp.Engine;
-using CityApp.Interfaces;
 using CityApp.Logic.AppServices;
 using CityApp.Logic.ViewModels;
-using CityApp.Models;
 using CityApp.Web.Common;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -14,19 +11,13 @@ namespace CityApp.Web.Pages.Info
 {
     public class DetailsPageModel : GeneratorBasePageModel
     {
-        private readonly ILogger<DetailsPageModel> logger;
-        private readonly INewsRepository newsRepository;
-        private readonly ICityUserRepository cityUserRepository;
         private readonly IUserDataContext userDataContext;
         private readonly IMediator mediator;
 
-        public DetailsPageModel(ILogger<DetailsPageModel> logger, INewsRepository newsRepository,
-            ICityUserRepository cityUserRepository, IUserDataContext userDataContext,
+        public DetailsPageModel(ILogger<DetailsPageModel> logger, 
+            IUserDataContext userDataContext,
             IMediator mediator)
         {
-            this.logger = logger;
-            this.newsRepository = newsRepository;
-            this.cityUserRepository = cityUserRepository;
             this.userDataContext = userDataContext;
             this.mediator = mediator;
         }
