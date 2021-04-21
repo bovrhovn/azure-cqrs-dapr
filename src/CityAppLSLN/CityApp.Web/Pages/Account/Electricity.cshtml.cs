@@ -3,10 +3,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using CityApp.Engine;
 using CityApp.Interfaces;
+using CityApp.Logic.AppServices;
+using CityApp.Logic.ViewModels;
 using CityApp.Models;
 using CityApp.Web.Common;
 using CityApp.Web.Helpers;
 using CityApp.Web.Settings;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -19,55 +22,33 @@ namespace CityApp.Web.Pages.Account
     public class ElectricityPageModel : GeneratorBasePageModel
     {
         private readonly ILogger<ElectricityPageModel> logger;
-        private readonly IElectricityRepository electricityRepository;
-        private readonly IElectricityMeasurementRepository electricityMeasurementRepository;
+        private readonly IMediator mediator;
         private readonly IUserDataContext userDataContext;
-        private WebSettings webSettings;
+        private readonly WebSettings webSettings;
 
         public ElectricityPageModel(ILogger<ElectricityPageModel> logger,
-            IElectricityRepository electricityRepository,
-            IElectricityMeasurementRepository electricityMeasurementRepository,
+            IMediator mediator,
             IUserDataContext userDataContext,
             IOptions<WebSettings> webSettingsValue)
         {
             this.logger = logger;
-            this.electricityRepository = electricityRepository;
-            this.electricityMeasurementRepository = electricityMeasurementRepository;
+            this.mediator = mediator;
             this.userDataContext = userDataContext;
             webSettings = webSettingsValue.Value;
         }
 
         public async Task OnGetAsync(int? pageIndex)
         {
-            logger.LogInformation($"Electricity page loaded with query string {Electricity}");
-            var list = await electricityRepository.GetAllAsync();
-            ElectricityList =
-                list.ToList().GetSelectedItems(d => d.Name + " " + d.Place, d => d.ElectricityId.ToString(),
-                    d => d.ElectricityId.ToString() == Electricity);
-
-            ElectricityList.Insert(0, new SelectListItem("--- Pick from list ---", ""));
-
-            var userId = userDataContext.GetCurrentUser().CityUserId;
-            var page = pageIndex ?? 1;
-            if (string.IsNullOrEmpty(Electricity))
-            {
-                logger.LogInformation($"Doing filter without electricity");
-                Measurements =
-                    await electricityMeasurementRepository.GetPagedForUserAsync(userId, null, page,
-                        webSettings.DefaultPageCount);
-            }
-            else
-            {
-                logger.LogInformation($"Doing filter with electricity {Electricity}");
-                var electricityId = int.Parse(Electricity);
-                Measurements =
-                    await electricityMeasurementRepository.GetPagedForUserAsync(userId, electricityId, page,
-                        webSettings.DefaultPageCount);
-            }
+            var dataModel = await mediator.Send(new GetMeasurementsQuery(
+                userDataContext.GetCurrentUser().CityUserId,
+                Electricity,
+                pageIndex ?? 1, webSettings.DefaultPageCount));
+            ElectricityList = dataModel.ElectricityList;
+            Measurements = dataModel.Measurements;
         }
 
         [BindProperty(SupportsGet = true)] public string Electricity { get; set; }
         [BindProperty] public List<SelectListItem> ElectricityList { get; set; }
-        public PaginatedList<ElectricityMeasurement> Measurements { get; set; }
+        public PaginatedList<ElectricityViewModel> Measurements { get; set; }
     }
 }
