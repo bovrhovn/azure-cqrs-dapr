@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CityApp.Engine;
-using CityApp.Interfaces;
 using CityApp.Models;
 using CityApp.Web.Common;
 using CityApp.Web.Helpers;

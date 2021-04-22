@@ -34,7 +34,7 @@ namespace CityApp.Web.Pages.Account
 
         public async Task<IActionResult> OnPostAsync()
         {
-            logger.LogInformation(@"Logging in user with {Email}");
+            logger.LogInformation($"Logging in user with {Email}");
             var currentUser = await userRepository.LoginAsync(Email, Password);
             if (currentUser == null)
             {
