@@ -1,0 +1,16 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: sckeyvault  
+spec:
+  type: secretstores.azure.keyvault
+  version: v1
+  metadata:
+    - name: vaultName
+      value: sckeyvault
+    - name: spnTenantId
+      value: "72f988bf-86f1-41af-91ab-2d7cd011db47"
+    - name: spnClientId
+      value: "dffdd2fa-5c36-4966-ab53-0f5c5a29ed0c"
+    - name: spnCertificateFile
+      value : "C:/Users/bovrhovn/OneDrive/Linux/Work/SmartCity/sckeyvault-daprcert-20210421.pfx"

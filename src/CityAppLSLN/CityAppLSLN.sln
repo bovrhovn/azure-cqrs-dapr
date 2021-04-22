@@ -33,6 +33,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CityApp.News", "CityApp.New
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CityApp.Electricity", "CityApp.Electricity\CityApp.Electricity.csproj", "{E7B3B437-FFE6-4171-A2D2-A744D0D58CDB}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dapr", "Dapr", "{DB960EBC-4A2A-4935-8EB8-3BA6294B49E0}"
+ProjectSection(SolutionItems) = preProject
+	..\azurekeyvault.yaml = ..\azurekeyvault.yaml
+	..\tablestorage.yaml = ..\tablestorage.yaml
+EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
