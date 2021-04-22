@@ -37,6 +37,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dapr", "Dapr", "{DB960EBC-4
 ProjectSection(SolutionItems) = preProject
 	..\azurekeyvault.yaml = ..\azurekeyvault.yaml
 	..\tablestorage.yaml = ..\tablestorage.yaml
+	..\dapr-run-apps = ..\dapr-run-apps
 EndProjectSection
 EndProject
 Global

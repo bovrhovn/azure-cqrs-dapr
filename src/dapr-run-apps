@@ -1,0 +1,5 @@
+## RUN THE app to activate sidecar on port 3500 with tablestorage components
+dapr run --app-id city-app-state --dapr-http-port 3500 --components-path C:/Work/Projects/azure-cqrs-dapr/src/
+
+## RUN WITH APP PORT
+dapr run --app-id city-app-state --dapr-http-port 3500 --components-path C:/Work/Projects/azure-cqrs-dapr/src/ --app-port 5001

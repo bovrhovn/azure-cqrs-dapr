@@ -53,6 +53,16 @@
                             Electricity stats
                         </a>
                     </li>
+                     @if (User.Identity.IsAuthenticated)
+                     {
+                         <li class="nav-item">
+                             <a asp-area=""
+                                asp-page="/Status/Messages"
+                                class="nav-link text-dark">
+                                 Activitiy log
+                             </a>
+                         </li>
+                     }
                 </ul>
             </div>
             <form class="form-inline my-2 my-lg-0">

@@ -49,15 +49,23 @@ namespace CityApp.Web.Factories
         {
             logger.LogInformation($"Retrieving message for user {cityUserId}");
             var url = $"{stateStore}/{cityUserId}";
-            var responseMessage = await client.GetStringAsync(url);
-            logger.LogInformation($"Message received {responseMessage}");
-            if (string.IsNullOrEmpty(responseMessage))
+            try
             {
-                logger.LogInformation("No data has been returned");
+                var responseMessage = await client.GetStringAsync(url);
+                logger.LogInformation($"Message received {responseMessage}");
+                if (string.IsNullOrEmpty(responseMessage))
+                {
+                    logger.LogInformation("No data has been returned");
+                    return null;
+                }
+                var result = JsonConvert.DeserializeObject<MessageModel>(responseMessage);
+                return result;
+            }
+            catch (Exception e)
+            {
+                logger.LogInformation("There has been error " + e.Message);
                 return null;
             }
-            var result = JsonConvert.DeserializeObject<MessageModel>(responseMessage);
-            return result;
         }
     }
 }
