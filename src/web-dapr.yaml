@@ -13,7 +13,7 @@ metadata:
   name: webapp
   labels:
     app: web
-    service: web
+    service: web  
 spec:
   replicas: 1
   selector:
@@ -23,11 +23,15 @@ spec:
     metadata:
       labels:
         app: web
-        service: web              
+        service: web
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "web"
+        dapr.io/app-port: "80"
     spec:
       containers:
         - name: web
-          image: scimagesregistry.azurecr.io/citywebapp:4.0
+          image: scimagesregistry.azurecr.io/citywebapp:5.0
           imagePullPolicy: Always
           ports:
             - name: http
@@ -36,10 +40,10 @@ spec:
           env:
             - name: NewsServiceUrl
               value: "http://news-api.services.svc.cluster.local/news/"
-            - name: ElectricityServiceUrl
-              value: "http://electricity-api.services.svc.cluster.local/electricity/"	    
-	        - name: StateStore
+            - name: StateStore
               value: "tablestorage"
+            - name: ElectricityServiceUrl
+              value: "http://electricity-api.services.svc.cluster.local/electricity/"
             - name: ConnectionStrings__DefaultConnection
               valueFrom:
                 secretKeyRef:
