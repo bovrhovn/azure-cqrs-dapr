@@ -5,6 +5,8 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.Azure.SignalR" Version="1.8.0" />
+        <PackageReference Include="Dapr.Client" Version="1.1.0" />
+        <PackageReference Include="Dapr.AspNetCore" Version="1.1.0" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\CityApp.Interfaces\CityApp.Interfaces.csproj" />

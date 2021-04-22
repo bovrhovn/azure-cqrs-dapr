@@ -56,9 +56,9 @@ namespace CityApp.Web
 
             services.AddHttpClient<INewsService, NewsService>();
             services.AddHttpClient<IElectricityService, ElectricityService>();
-            services.AddHttpClient<IMessageService, MessageService>();
+            services.AddScoped<IMessageService, MessageService>();
             
-            services.AddControllers();
+            services.AddControllers().AddDapr();
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",

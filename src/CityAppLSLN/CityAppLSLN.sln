@@ -38,6 +38,7 @@ ProjectSection(SolutionItems) = preProject
 	..\azurekeyvault.yaml = ..\azurekeyvault.yaml
 	..\tablestorage.yaml = ..\tablestorage.yaml
 	..\dapr-run-apps = ..\dapr-run-apps
+	..\web-dapr.yaml = ..\web-dapr.yaml
 EndProjectSection
 EndProject
 Global
