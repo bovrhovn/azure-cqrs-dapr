@@ -48,7 +48,7 @@ To see check the code, you can use [Visual Studio Code](https://code.microsoft.c
 
 To run the code, you can go into **src** folder, open the solution and run the solution via [dotnet run](https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-run) commmand.
 
-For the database creation, you can use the initial [SQL script here](https://csacoresettings.blob.core.windows.net/files/SmartCityDb_Initial_Creation_Script.sql).
+For the database creation, you can use the initial [SQL script here](https://webeudatastorage.blob.core.windows.net/files/SmartCityDb_Initial_Creation_Script.sql).
 
 # Credits
 
